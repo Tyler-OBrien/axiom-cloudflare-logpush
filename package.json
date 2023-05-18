@@ -1,0 +1,22 @@
+{
+  "name": "http-logtail-logpush",
+  "version": "1.0.0",
+  "description": "Sample of using LogTail with Worker Trace Events Logpush\r All Credit to https://gist.github.com/stefandanaita/88c4d8b187400d5b07524cd0a12843b2 for most of the code.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/random-code-samples/http-logtail-logpush.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/random-code-samples/http-logtail-logpush/issues"
+  },
+  "homepage": "https://github.com/random-code-samples/http-logtail-logpush#readme",
+  "devDependencies": {
+    "wrangler": "^2.14.0"
+  }
+}
