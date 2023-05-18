@@ -28,8 +28,8 @@ export default {
     for await (const event of streamAsyncIterator(events)) {
       // Do stuff with the event
       var parsedEvent = JSON.parse(event);
-      // Trying to support most types. Most logpush events just have "Timestamp". Workers Logpush has "EventTimestampMs". HTTP has "EdgeStartTimestamp"
-      parsedEvent["_time"] = parsedEvent.EventTimestampMs ?? parsedEvent.Timestamp ?? parsedEvent.EdgeStartTimestamp;
+      // Trying to support most types. Most logpush events just have "Timestamp". Workers Logpush has "EventTimestampMs". HTTP has "EdgeStartTimestamp". Access Requests use CreatedAt. ZT Gateway Events use Datetime.
+      parsedEvent["_time"] = parsedEvent.EventTimestampMs ?? parsedEvent.Timestamp ?? parsedEvent.EdgeStartTimestamp ?? parsedEvent.CreatedAt ?? parsedEvent.Datetime;
       eventsToPush.push(parsedEvent);
     }
     let json = JSON.stringify(eventsToPush);
