@@ -27,7 +27,10 @@ export default {
     let eventsToPush: string[] = [];
     for await (const event of streamAsyncIterator(events)) {
       // Do stuff with the event
-      eventsToPush.push(JSON.parse(event));
+      var parsedEvent = JSON.parse(event);
+      // Trying to support most types. Most logpush events just have "Timestamp". Workers Logpush has "EventTimestampMs". HTTP has "EdgeStartTimestamp"
+      parsedEvent["_time"] = parsedEvent.EventTimestampMs ?? parsedEvent.Timestamp ?? parsedEvent.EdgeStartTimestamp;
+      eventsToPush.push(parsedEvent);
     }
     let json = JSON.stringify(eventsToPush);
     let dataset = url.pathname.substring(1);
@@ -45,7 +48,7 @@ export default {
         status: 500,
       });
     }
-
+    console.log(`Ingested ${eventsToPush.length} events into ${dataset}`)
     return new Response("Nom nom!", { status: 202 });
   },
 };

@@ -27,9 +27,11 @@ curl -s -X POST 'https://api.cloudflare.com/client/v4/accounts/{AccountID}/logpu
   "name": "logpush-to-worker",
   "destination_conf": "https://{YourWorkerName}.{YourSubdomain}.workers.dev/cloudflare?header_Authorization={LogPushSecret}",
   "dataset": "workers_trace_events",
-  "enabled": true
+  "enabled": true,
+  "frequency": "high"
 }' -H "X-Auth-Email: ....." -H "X-Auth-Key: ...."
 ```
+Frequency options are "low" or "high". 
 
 Insert your Account ID (find in Workers Tab on Right side), your worker domain, your logpush secret, and CF API Auth Details (either Global API Key or API Token)
 The dataset is the path.
