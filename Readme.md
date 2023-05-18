@@ -34,6 +34,7 @@ curl -s -X POST 'https://api.cloudflare.com/client/v4/accounts/{AccountID}/logpu
 Frequency options are "low" or "high". 
 
 Insert your Account ID (find in Workers Tab on Right side), your worker domain, your logpush secret, and CF API Auth Details (either Global API Key or API Token)
+
 The dataset is the path.
 
 
