@@ -1,3 +1,9 @@
 name = "axiom-logpush"
 main = "src/index.ts"
 compatibility_date = "2023-05-17"
+
+
+# Uncomment if you want to use Analytics Engine to track ingestion rates (mainly just how many events CF is pushing in a single job)
+#analytics_engine_datasets = [
+#    { binding = "IngestRate" }
+#]

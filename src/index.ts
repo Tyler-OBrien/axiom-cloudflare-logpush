@@ -5,6 +5,7 @@ export interface Env {
   AuthSecret: string;
   LogPushSecret: string;
   Dataset: string;
+  IngestRate: AnalyticsEngineDataset;
 }
 export default {
   async fetch(
@@ -29,26 +30,51 @@ export default {
       // Do stuff with the event
       var parsedEvent = JSON.parse(event);
       // Trying to support most types. Most logpush events just have "Timestamp". Workers Logpush has "EventTimestampMs". HTTP has "EdgeStartTimestamp". Access Requests use CreatedAt. ZT Gateway Events use Datetime.
-      parsedEvent["_time"] = parsedEvent.EventTimestampMs ?? parsedEvent.Timestamp ?? parsedEvent.EdgeStartTimestamp ?? parsedEvent.CreatedAt ?? parsedEvent.Datetime;
+      parsedEvent["_time"] =
+        parsedEvent.EventTimestampMs ??
+        parsedEvent.Timestamp ??
+        parsedEvent.EdgeStartTimestamp ??
+        parsedEvent.CreatedAt ??
+        parsedEvent.Datetime;
       eventsToPush.push(parsedEvent);
     }
     let json = JSON.stringify(eventsToPush);
     let dataset = url.pathname.substring(1);
-    var response = await fetch(`https://api.axiom.co/v1/datasets/${dataset}/ingest`, {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${env.AuthSecret}`,
-      },
-      body: json,
-    });
+    var response = await fetch(
+      `https://api.axiom.co/v1/datasets/${dataset}/ingest`,
+      {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${env.AuthSecret}`,
+        },
+        body: json,
+      }
+    );
     if (response.ok == false) {
       return new Response(`Axiom responded with: ${await response.text()}`, {
         status: 500,
       });
     }
-    console.log(`Ingested ${eventsToPush.length} events into ${dataset}`)
+    console.log(`Ingested ${eventsToPush.length} events into ${dataset}`);
+    try {
+      if (env.IngestRate) {
+        env.IngestRate.writeDataPoint({
+          blobs: [
+            dataset,
+            request.headers.get("internal-type") ?? "unknown", // If you are pushing more then one logpush datasets into the same Axiom dataset, you can use this to differentiate them.
+          ],
+          doubles: [eventsToPush.length],
+          indexes: [dataset],
+        });
+      }
+    } catch (exception) {
+      console.error(
+        `Error ingesting Analytics Engine events into ${dataset}: ${exception}`
+      );
+    }
+
     return new Response("Nom nom!", { status: 202 });
   },
 };

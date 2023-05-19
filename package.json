@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/random-code-samples/http-logtail-logpush#readme",
   "devDependencies": {
-    "wrangler": "^2.14.0"
+    "@cloudflare/workers-types": "^4.20230511.0",
+    "wrangler": "^3.0.0"
   }
 }
