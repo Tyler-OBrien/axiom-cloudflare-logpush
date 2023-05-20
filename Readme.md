@@ -39,3 +39,8 @@ The dataset is the path.
 
 
 CF will send a test event. If it works, then congrats you're done. Check in Axiom for your events and take a nap.
+
+## Analytics Engine
+You can uncomment the Analytics Engine block in wrangler.toml, to log ingest information to Analytics Engine. In this repo, simple-dashboard.json is a simple Grafana dashboard for showing its information, using the Altinity Plugin for Clickhouse. Set up Grafana with AE with this guide: https://developers.cloudflare.com/analytics/analytics-engine/grafana/
+
+![Picture of Dashboard](grafana.png "Grafana Dash")
